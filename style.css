@@ -1,0 +1,86 @@
+:root {
+  --panel-bg: rgba(0, 0, 0, 0.45);
+  --accent: #ffd966;
+  --muted: rgba(255, 255, 255, 0.9);
+  --mono: "SFMono-Regular", "Menlo", "Monaco", monospace;
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+  background: #020204;
+  color: var(--muted);
+  font-family: system-ui, Arial, sans-serif;
+  overflow: hidden;
+}
+
+canvas {
+  display: block;
+}
+
+/* Floating UI Panel */
+#ui {
+  position: fixed;
+  left: 16px;
+  top: 16px;
+  z-index: 20;
+  background: var(--panel-bg);
+  padding: 12px 14px;
+  border-radius: 10px;
+  color: var(--muted);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.6);
+  max-width: 320px;
+  backdrop-filter: blur(6px);
+}
+
+#ui h1 {
+  margin: 0 0 6px 0;
+  font-size: 16px;
+  color: var(--accent);
+  font-weight: 600;
+  letter-spacing: 0.4px;
+}
+
+#ui p {
+  margin: 6px 0 0 0;
+  font-size: 13px;
+  line-height: 1.4;
+  opacity: 0.95;
+}
+
+#ui .small {
+  font-size: 12px;
+  opacity: 0.85;
+  margin-top: 8px;
+}
+
+/* Buttons */
+button.ui-btn {
+  margin-top: 8px;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: var(--muted);
+  padding: 6px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: var(--mono);
+  font-size: 12px;
+  transition: all 0.2s ease-in-out;
+}
+
+button.ui-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  box-shadow: 0 0 10px rgba(255, 217, 102, 0.4);
+}
+
+/* Footer Note */
+#footerNote {
+  position: fixed;
+  right: 16px;
+  bottom: 14px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.6);
+  user-select: none;
+}

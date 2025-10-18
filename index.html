@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Quantum Wave–Particle — Interactive</title>
+
+    <!-- Link external CSS -->
+    <link rel="stylesheet" href="style.css" />
+
+    <!-- p5.js core -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
+
+    <script src="final.js" defer></script>
+  </head>
+  <body>
+    <div id="ui" role="region" aria-label="Controls">
+      <h1>Quantum Wave–Particle</h1>
+      <p>
+        <strong>Interact:</strong> Click to change shape, drag to push
+        particles, Space to toggle Wave/Particle.
+      </p>
+      <div class="small">
+        <div>
+          <strong>Keys:</strong> 1–4 = presets • S = save snapshot • R = reseed
+        </div>
+        <div style="margin-top: 6px">
+          <button class="ui-btn" onclick="toggleInstructions()">
+            Toggle Instructions
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div id="footerNote">Tip: run with a big screen for best performance</div>
+
+    <!-- Small inline JS for UI toggling I added it here to seperate it from the art work-->
+    <script>
+      let shown = false;
+      function toggleInstructions() {
+        const ui = document.getElementById("ui");
+        if (!shown) {
+          const el = document.createElement("p");
+          el.id = "ins";
+          el.innerHTML =
+            "<em>Mouse move</em>: influence field • <em>Mouse drag</em>: stronger attract/repel • <em>Click</em>: cycle shape";
+          el.style.marginTop = "8px";
+          ui.appendChild(el);
+          shown = true;
+        } else {
+          const el = document.getElementById("ins");
+          if (el) ui.removeChild(el);
+          shown = false;
+        }
+      }
+    </script>
+  </body>
+</html>
