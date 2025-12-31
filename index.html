@@ -5,11 +5,11 @@
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>Quantum Wave–Particle — Interactive</title>
 
-    <!-- Link external CSS -->
     <link rel="stylesheet" href="style.css" />
 
-    <!-- p5.js core -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
 
     <script src="final.js" defer></script>
   </head>
@@ -28,6 +28,9 @@
           <button class="ui-btn" onclick="toggleInstructions()">
             Toggle Instructions
           </button>
+          <button class="ui-btn" id="startAudioBtn" onclick="startAudio()">
+            Enable Sound
+          </button>
         </div>
       </div>
     </div>
@@ -37,6 +40,8 @@
     <!-- Small inline JS for UI toggling I added it here to seperate it from the art work-->
     <script>
       let shown = false;
+      let audioStarted = false;
+
       function toggleInstructions() {
         const ui = document.getElementById("ui");
         if (!shown) {
@@ -51,6 +56,17 @@
           const el = document.getElementById("ins");
           if (el) ui.removeChild(el);
           shown = false;
+        }
+      }
+
+      async function startAudio() {
+        if (!audioStarted) {
+          await Tone.start();
+          console.log("Audio context started");
+          document.getElementById("startAudioBtn").textContent =
+            "Sound Enabled ✓";
+          document.getElementById("startAudioBtn").disabled = true;
+          audioStarted = true;
         }
       }
     </script>

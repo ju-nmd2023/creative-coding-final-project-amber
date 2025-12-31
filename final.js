@@ -27,6 +27,12 @@ let curPreset = 0;
 let gridCols = 60;
 let gridRows = 40;
 
+// (Tone.js) added for the grade 4
+let synth;
+let reverb;
+let volume;
+let audioEnabled = false;
+
 function setup() {
   createCanvas(windowWidth, windowHeight);
   colorMode(HSB, 360, 100, 100, 1);
@@ -74,6 +80,28 @@ function setup() {
   for (let i = 0; i < N; i++) {
     particles.push(new Particle());
   }
+}
+
+function setupSound() {
+  // Create a simple synth with reverb effect
+  reverb = new Tone.Reverb({
+    decay: 3,
+    wet: 0.4,
+  }).toDestination();
+
+  volume = new Tone.Volume(-12).connect(reverb);
+
+  synth = new Tone.PolySynth(Tone.Synth, {
+    oscillator: { type: "sine" },
+    envelope: {
+      attack: 0.05,
+      decay: 0.2,
+      sustain: 0.1,
+      release: 0.8,
+    },
+  }).connect(volume);
+
+  audioEnabled = true;
 }
 
 function draw() {
@@ -159,7 +187,7 @@ class Particle {
     this.prev.set(this.pos);
     this.pos.add(this.vel);
 
-    // subtle boundary wrap with soft friction (keeps field continuous) used chatGPT
+    // subtle boundary wrap with soft friction (keeps field continuous) used chatGPT to fix the numbers
     if (this.pos.x < -50) this.pos.x = width + 50;
     if (this.pos.x > width + 50) this.pos.x = -50;
     if (this.pos.y < -50) this.pos.y = height + 50;
@@ -285,8 +313,20 @@ function drawSystemGrid() {
 
 // inputs
 function mousePressed() {
+  // Initialize sound on first interaction
+  if (!audioEnabled) {
+    setupSound();
+  }
+
   // cycle shapes on click (Zach Lieberman playful manipulation)
   shapeIndex = (shapeIndex + 1) % shapes.length;
+
+  // Play a note when clicking (different notes for different shapes)
+  if (audioEnabled && synth) {
+    const notes = ["C4", "E4", "G4", "B4"];
+    synth.triggerAttackRelease(notes[shapeIndex], "8n");
+  }
+
   // small burst of local particle velocity
   for (let p of particles) {
     let d = dist(mouseX, mouseY, p.pos.x, p.pos.y);
@@ -303,10 +343,26 @@ function keyPressed() {
   if (key === " ") {
     // toggle wave/particle (conceptual duality)
     mode = mode === "wave" ? "particle" : "wave";
+
+    // Play different note for mode switch
+    if (audioEnabled && synth) {
+      synth.triggerAttackRelease(mode === "wave" ? "A3" : "A4", "16n");
+    }
   } else if (key === "s" || key === "S") {
     saveCanvas("quantum_duality", "png"); // gives people chance to save the art
   } else if (key >= "1" && key <= "4") {
     applyPreset(int(key) - 1);
+
+    // Play chord for preset change
+    if (audioEnabled && synth) {
+      const chords = [
+        ["C4", "E4", "G4"],
+        ["D4", "F#4", "A4"],
+        ["E4", "G#4", "B4"],
+        ["F4", "A4", "C5"],
+      ];
+      synth.triggerAttackRelease(chords[int(key) - 1], "8n");
+    }
   } else if (key === "r" || key === "R") {
     // reseed completely (autonomous evolution -- Nees)
     randomSeed(millis());
@@ -314,6 +370,11 @@ function keyPressed() {
     for (let p of particles) {
       p.pos = createVector(random(width), random(height));
       p.vel = p5.Vector.random2D().mult(0.2);
+    }
+
+    // Play glissando effect for reseed
+    if (audioEnabled && synth) {
+      synth.triggerAttackRelease("C5", "16n");
     }
   }
 }
